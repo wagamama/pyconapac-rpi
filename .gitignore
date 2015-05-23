@@ -1,0 +1,7 @@
+# Python runtime
+__pycache__
+*.py[cod]
+
+# Real data
+*.db
+*.csv
