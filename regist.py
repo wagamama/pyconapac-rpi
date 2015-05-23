@@ -14,6 +14,7 @@ import threading
 import os
 from nfc import NFC
 from db_controller import DBController
+from web import web
 
 from db_controller import DBController
 
@@ -172,7 +173,16 @@ class TabBar(Frame, threading.Thread):
                     sv_attend_type.set(user.attend_type)
 
             elif self.current_tab == TAB2 :
-                pass
+                sv_uid.set(uid)
+                cnnt = web()
+                result = cnnt.tshirtQuery(uid)
+                if result:
+                    tsize, ttime = result
+                    if ttime == 0:
+                        sv_tshirt_size.set(tsize)
+                        cnnt.tshirtUpdate()
+                    else:
+                        sb_nickname.set('No more T-shirt for you')
             else:
                 pass
 
@@ -194,6 +204,7 @@ if __name__ == '__main__':
     global regist_status
     global tshirt_status
     global txt3_fm1
+    global tshirt_size
 
     sv_reg_no = StringVar()
     sv_name   = StringVar()
@@ -204,6 +215,7 @@ if __name__ == '__main__':
     sv_tshirt_status = StringVar()
     sv_pair_status = StringVar()
     sv_regist_count = StringVar()
+    sv_tshirt_size = StringVar()
 
 
     tabbar = TabBar(root, TAB1)
@@ -221,7 +233,7 @@ if __name__ == '__main__':
     tab1_lbl_reg_no = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_reg_no).pack(side=TOP, expand=YES, fill=BOTH)
     tab1_lbl_nickname = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_nickname).pack(side=TOP, expand=YES, fill=BOTH)
     tab1_lbl_attend_type = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_attend_type).pack(side=TOP, expand=YES, fill=BOTH)
-    #tab1_lbl_tshirt_size = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_tshirt_size).pack(side=TOP, expand=YES, fill=BOTH)
+    tab1_lbl_tshirt_size = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_tshirt_size).pack(side=TOP, expand=YES, fill=BOTH)
     txt = Text(tab2, width=50, height=20)
     txt.pack(side=LEFT, fill=X, expand=YES)
 
