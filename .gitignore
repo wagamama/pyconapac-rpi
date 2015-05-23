@@ -5,3 +5,7 @@ __pycache__
 # Real data
 *.db
 *.csv
+
+# Vim swap files
+*.swp
+*.swo
