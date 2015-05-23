@@ -1,5 +1,5 @@
 from lib.rfid_mfrc522 import read_rfid
-from lib.info import *
+from lib import info
 
 print info.MACHINE_ID, info.SD_ID
 
