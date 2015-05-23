@@ -28,7 +28,7 @@ BASE = RAISED
 SELECTED = FLAT
 
 # a base tab class
-class Tab(Frame):
+class Tab(Frame, threading.Thread):
     def __init__(self, master, name):
         Frame.__init__(self, master)
         self.tab_name = name
@@ -36,13 +36,15 @@ class Tab(Frame):
 
 # the bulk of the logic is in the actual tab bar
 
-class TabBar(Frame):
+class TabBar(Frame, threading.Thread):
     def __init__(self, master=None, init_name=None):
         Frame.__init__(self, master)
         self.tabs = {}
         self.buttons = {}
         self.current_tab = None
         self.init_name = init_name
+        threading.Thread.__init__(self)
+        self.start()
 
     def show(self):
         self.pack(side=TOP, expand=YES, fill=X)
@@ -83,24 +85,6 @@ class TabBar(Frame):
         if self.current_tab == TAB1 :
             self.winfo_toplevel().wm_geometry("320x240+0+0")
             subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
-            dbc = DBController('/home/pi/pyconapac-rpi/db/pycon2015.db')
-            uid = NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
-            user = dbc.getInfoByUid(uid)
-            if user.data is None:
-                # XXX: Uid not found, show error message
-                print('Uid not found, please contact staff')
-            else:
-                if user.regist_wtime is None:
-                    # first time to check in
-                    dbc.setRegistTimeByUid(uid)
-                    
-                    # XXX: show user info on screen
-                    print('First time to check in')
-                    print(user.fullname, user.regist_wtime)
-                else:
-                    # XXX: already checked in, show error message:
-                    print('You already checked in')
-                    print(user.fullname, user.regist_wtime)
 
         elif self.current_tab == TAB2 :
             self.winfo_toplevel().wm_geometry("320x240+0+0")
@@ -116,14 +100,23 @@ class TabBar(Frame):
 
     def run(self):
         while True:
-            print self.current_tab
 
-            p = subprocess.Popen('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            for line in p.stdout.readlines():
-                if "UID (NFCID1)" in line:
-                    uid_nfcid = line.split(":")
-                    uid = uid_nfcid[1].strip(' \t\n\r')
-                    print uid
+            uid = NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
+            
+            if self.current_tab == TAB1:
+                dbc = DBController('/home/pi/pyconapac-rpi/db/pycon2015.db')
+                user = dbc.getInfoByUid(uid)
+                if user.data is None:
+                    # Uid not found, show error message
+                    sv_nickname.set('Uid not found')
+                    sv_reg_no.set('')
+                    sv_attend_type.set('')
+                else:
+                    dbc.setRegistTimeByUid(uid)
+                    sv_nickname.set(user.nickname)
+                    sv_reg_no.set(user.reg_no)
+                    sv_attend_type.set(user.attend_type)
+
 
             if self.current_tab == TAB1 :
                 pass
@@ -132,7 +125,6 @@ class TabBar(Frame):
             else :
                 pass
 
-            retval = p.wait()
             time.sleep(1)
 
 
