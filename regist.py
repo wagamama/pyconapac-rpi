@@ -12,6 +12,8 @@ import time
 import sqlite3
 import threading
 import os
+from nfc import NFC
+from db_controller import DBController
 
 DB_NAME = "pycon2015.db"
 TABLE_NAME = "regist"
@@ -81,6 +83,24 @@ class TabBar(Frame):
         if self.current_tab == TAB1 :
             self.winfo_toplevel().wm_geometry("320x240+0+0")
             subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
+            dbc = DBController('/home/pi/pyconapac-rpi/db/pycon2015.db')
+            uid = NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
+            user = dbc.getInfoByUid(uid)
+            if user.data is None:
+                # XXX: Uid not found, show error message
+                print('Uid not found, please contact staff')
+            else:
+                if user.regist_wtime is None:
+                    # first time to check in
+                    dbc.setRegistTimeByUid(uid)
+                    
+                    # XXX: show user info on screen
+                    print('First time to check in')
+                    print(user.fullname, user.regist_wtime)
+                else:
+                    # XXX: already checked in, show error message:
+                    print('You already checked in')
+                    print(user.fullname, user.regist_wtime)
 
         elif self.current_tab == TAB2 :
             self.winfo_toplevel().wm_geometry("320x240+0+0")
