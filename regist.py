@@ -18,8 +18,7 @@ TABLE_NAME = "regist"
 TAB1 = u"報到".encode('utf-8')
 TAB2 = u"T恤".encode('utf-8')
 TAB3 = u"新增".encode('utf-8')
-TAB4 = u"同步".encode('utf-8')
-TAB5 = "EXIT"
+TAB4 = "EXIT"
 NOT_FOUND = "NOT FOUND"
 
 BASE = RAISED
@@ -45,52 +44,52 @@ class TabBar(Frame):
     def show(self):
         self.pack(side=TOP, expand=YES, fill=X)
         self.switch_tab(self.init_name or self.tabs.keys()[-1])# switch the tab to the first tab
-    
+
     def add(self, tab):
         tab.pack_forget()                                   # hide the tab on init
-        
+
         self.tabs[tab.tab_name] = tab                       # add it to the list of tabs
         b = Button(self, text=tab.tab_name, relief=BASE,    # basic button stuff
             command=(lambda name=tab.tab_name: self.switch_tab(name)))  # set the command to switch tabs
         b.pack(side=LEFT)                                               # pack the buttont to the left mose of self
         self.buttons[tab.tab_name] = b                                          # add it to the list of buttons
-    
+
     def delete(self, tabname):
-        
+
         if tabname == self.current_tab:
             self.current_tab = None
             self.tabs[tabname].pack_forget()
             del self.tabs[tabname]
             self.switch_tab(self.tabs.keys()[0])
-        
+
         else: del self.tabs[tabname]
-        
+
         self.buttons[tabname].pack_forget()
-        del self.buttons[tabname] 
-        
-    
+        del self.buttons[tabname]
+
+
     def switch_tab(self, name):
         if self.current_tab:
             self.buttons[self.current_tab].config(relief=BASE)
             self.tabs[self.current_tab].pack_forget()           # hide the current tab
         self.tabs[name].pack(side=BOTTOM)                           # add the new tab to the display
         self.current_tab = name                                 # set the current tab to itself
-        
+
         self.buttons[name].config(relief=SELECTED)                  # set it to the selected style
 
         if self.current_tab == TAB1 :
-            self.winfo_toplevel().wm_geometry("320x240+0+0")
+            self.winfo_toplevel().wm_geometry("320x205+0+0")
             subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
 
         elif self.current_tab == TAB2 :
-            self.winfo_toplevel().wm_geometry("320x240+0+0")
+            self.winfo_toplevel().wm_geometry("320x205+0+0")
             subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
 
         elif self.current_tab == TAB3 :
-            self.winfo_toplevel().wm_geometry("320x100+0+100")
+            self.winfo_toplevel().wm_geometry("320x110+0+95")
             subprocess.call(['/home/pi/pyconapac-rpi/sh/matchbox_keyboard_numpad.sh'])
 
-        elif self.current_tab == TAB5 :
+        elif self.current_tab == TAB4 :
             subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
             subprocess.call(['sudo', '/home/pi/pyconapac-rpi/sh/kill_touch.sh'])
 
@@ -116,12 +115,13 @@ class TabBar(Frame):
             time.sleep(1)
 
 
-            
+
 if __name__ == '__main__':
     def write(x): print x
-        
+
     root = Tk()
-    root.geometry('320x240+0+0')
+    root.title("PyConAPAC 2015")
+    root.geometry('320x205+0+0')
 
     global count_come
     global reg_no
@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
 
     tabbar = TabBar(root, TAB1)
-    
+
     tab1 = Tab(root, TAB1)
     tab1_lbl_reg_no = Label(tab1, width=50, height=1, font=('Arial', 16), textvariable=sv_reg_no).pack(side=TOP, expand=YES, fill=BOTH)
     tab1_lbl_nickname = Label(tab1, width=50, height=1, font=('Arial', 16), textvariable=sv_nickname).pack(side=TOP, expand=YES, fill=BOTH)
@@ -199,19 +199,15 @@ if __name__ == '__main__':
     # tab4
     tab4 = Tab(root, TAB4)
 
-    # tab5
-    tab5 = Tab(root, TAB5)
 
-    
     tabbar.add(tab1)                   # add the tabs to the tab bar
     tabbar.add(tab2)
     tabbar.add(tab3)
     tabbar.add(tab4)
-    tabbar.add(tab5)
 
     #bar.config(bd=2, relief=RIDGE)         # add some border
-    
+
     tabbar.show()
-    
+
     root.mainloop()
 
