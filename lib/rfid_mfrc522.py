@@ -43,7 +43,7 @@ def read_rfid():
         if status == MIFAREReader.MI_OK:
 
             # Print UID
-            UID = "{0:02x}{1:02x}{2:02x}{3:02x}".format(*uid[:4])
+            UID = "{0:02x} {1:02x} {2:02x} {3:02x}".format(*uid[:4])
 
             print "Card read UID: %s" % UID
             yield UID
