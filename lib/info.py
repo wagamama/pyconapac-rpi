@@ -1,9 +1,24 @@
-import subprocess as sub
+import re, os
+import logging
 
-def execute(cmd):
-    p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
-    output, errors = p.communicate()
-    return output
+re_machine = re.compie(r'Serial[\s]+:[\s]+([a-f\d]+)')
+def machine_id():
+    try:
+        return re_machine.findall(open('/proc/cpuinfo').read())[0]
+    except Exception as e:
+        logging.exception(e)
 
-MACHINE_ID = execute("cat /proc/cpuinfo | grep Serial | awk ' {print $3}'")
-SD_ID = execute("ls -l /dev/disk/by-uuid/ | grep mmcblk0p2 | awk '{print $9}'")
+MACHINE_ID = machine_id()
+
+re_sd = re.compile(r'([\da-f\-]+)')
+def sd_id():
+    try:
+        os.system("ls -l /dev/disk/by-uuid/ > disks.tmp")
+        with open('disks.tmp') as ifile:
+            for iline in ifile:
+                if 'mmcblk0p2' in iline:
+                    return re_sd.findall(iline)[0]
+    except Exception as e:
+        logging.exception(e)
+
+SD_ID = sd_id()
