@@ -14,7 +14,7 @@ class App:
 
 def onClickOK():
     print "onClickOK()"
-    os.system("sudo shutdown -h now")
+    os.system("sudo sync; sudo init 0")
 
 def onClickCancel():
     print "onClickCancel()"

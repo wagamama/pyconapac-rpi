@@ -50,12 +50,12 @@ class TabBar(Frame, threading.Thread):
         conn.isolation_level = None
 
 	while True:
-			
+
             time.sleep(0.5)
             print self.current_tab
 
             if self.current_tab == TAB1 :
-                                
+
                 p = subprocess.Popen('/home/pi/nfc/libnfc-1.7.0-rc7/examples/nfc-poll', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 for line in p.stdout.readlines():
 		    if "UID (NFCID1)" in line:
@@ -101,43 +101,43 @@ class TabBar(Frame, threading.Thread):
 
 				retval = p.wait()
 				time.sleep(1)
-		
 
-	
+
+
 	def show(self):
 		self.pack(side=TOP, expand=YES, fill=X)
 		self.switch_tab(self.init_name or self.tabs.keys()[-1])# switch the tab to the first tab
-	
+
 	def add(self, tab):
 		tab.pack_forget()									# hide the tab on init
-		
+
 		self.tabs[tab.tab_name] = tab						# add it to the list of tabs
 		b = Button(self, text=tab.tab_name, relief=BASE,	# basic button stuff
 			command=(lambda name=tab.tab_name: self.switch_tab(name)))	# set the command to switch tabs
 		b.pack(side=LEFT)												# pack the buttont to the left mose of self
 		self.buttons[tab.tab_name] = b											# add it to the list of buttons
-	
+
 	def delete(self, tabname):
-		
+
 		if tabname == self.current_tab:
 			self.current_tab = None
 			self.tabs[tabname].pack_forget()
 			del self.tabs[tabname]
 			self.switch_tab(self.tabs.keys()[0])
-		
+
 		else: del self.tabs[tabname]
-		
+
 		self.buttons[tabname].pack_forget()
-		del self.buttons[tabname] 
-		
-	
+		del self.buttons[tabname]
+
+
 	def switch_tab(self, name):
 		if self.current_tab:
 			self.buttons[self.current_tab].config(relief=BASE)
 			self.tabs[self.current_tab].pack_forget()			# hide the current tab
 		self.tabs[name].pack(side=BOTTOM)							# add the new tab to the display
 		self.current_tab = name									# set the current tab to itself
-		
+
 		self.buttons[name].config(relief=SELECTED)					# set it to the selected style
 
                 if self.current_tab == TAB1 :
@@ -295,15 +295,15 @@ def get_ip():
 		ip += line.strip(' \t\n\r')
 	return ip
 
-			
+
 if __name__ == '__main__':
 	def write(x): print x
-		
+
 	root = Tk()
 	ip = get_ip()
 	root.title(ip)
-        #root.geometry('320x240+0+0') 
-        #root.geometry('0+0') 
+        #root.geometry('320x240+0+0')
+        #root.geometry('0+0')
         #root.resizable(0,0)
 
 
@@ -331,7 +331,7 @@ if __name__ == '__main__':
 
 
 	tabbar = TabBar(root, TAB1)
-	
+
 	# tab1
 	tab1 = Tab(root, TAB1)
 
@@ -343,7 +343,7 @@ if __name__ == '__main__':
         tab1_lbl_regist_count = Label(tab1, width=50, height=1, font=('Arial', 16), textvariable=sv_regist_count).pack(side=TOP, expand=YES, fill=BOTH)
 
 
-	# tab2	
+	# tab2
 	tab2 = Tab(root, TAB2)
 	#Label(tab2, text="How are you??", bg='black', fg='#3366ff').pack(side=TOP, fill=BOTH, expand=YES)
 	#txt = Text(tab2, width=50, height=20)
@@ -357,7 +357,7 @@ if __name__ == '__main__':
         #tab1_lbl_tshirt_size = Label(tab2, width=50, height=1, font=('Arial', 16), textvariable=sv_tshirt_size).pack(side=TOP, expand=YES, fill=BOTH)
 	txt = Text(tab2, width=50, height=20)
 	txt.pack(side=LEFT, fill=X, expand=YES)
-	
+
 	# tab3
 	tab3 = Tab(root, TAB3)
 	tab3_fm1 = Frame(tab3)
@@ -408,7 +408,7 @@ if __name__ == '__main__':
 
 
 	#tabbar.config(bd=2, relief=RIDGE)			# add some border
-	
+
 	tabbar.show()
-	
+
 	root.mainloop()
