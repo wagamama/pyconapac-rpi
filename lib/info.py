@@ -10,7 +10,7 @@ def machine_id():
 
 MACHINE_ID = machine_id()
 
-re_sd = re.compile(r'([\da-f\-]+)')
+re_sd = re.compile(r'([\da-f]{8}\-[\da-f\-]+)')
 def sd_id():
     try:
         os.system("ls -l /dev/disk/by-uuid/ > disks.tmp")
