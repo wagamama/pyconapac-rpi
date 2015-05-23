@@ -8,7 +8,7 @@ DB_NAME = "pycon2015.db"
 
 class TestDBAccess(unittest.TestCase):
     def setUp(self):
-        subprocess.call(['../db/mkdb.sh'])
+        subprocess.call(['db/mkdb.sh'])
         conn = sqlite3.connect(DB_NAME)
         conn.isolation_level = None
         cursor = conn.cursor()
