@@ -13,6 +13,8 @@ import sqlite3
 import threading
 import os
 
+from db_controller import DBController
+
 DB_NAME = "pycon2015.db"
 TABLE_NAME = "regist"
 TAB1 = u"報到".encode('utf-8')
@@ -30,6 +32,60 @@ class Tab(Frame):
         Frame.__init__(self, master)
         self.tab_name = name
 
+
+class Tab3(Tab):
+    def __init__(self, master):
+
+        Tab.__init__(self, master, u"新增".encode('utf-8'))
+
+        self.db = DBController("/home/pi/pyconapac-rpi/db/pycon2015.db")
+        self.reg_no = StringVar()
+        self.nickname = StringVar()
+        self.attend_type = StringVar()
+
+        self.tab3_fm1 = Frame(self)
+        self.txt3_fm1 = Text(self.tab3_fm1, width=3, height=1, font=('Arial', 12))
+        self.txt3_fm1.pack(side=TOP, fill=X, expand=YES)
+        self.txt3_fm1.focus()
+
+        self.tab3_btn1 = Button(self.tab3_fm1, text='OK')
+        self.tab3_btn1.pack(side=TOP, anchor=W, fill=X, expand=YES)
+        self.tab3_btn1.bind('<Button-1>', self.load_profile)
+        #self.tab3_btn1.bind('<Button-1>', tabbar.load_profile(3))
+        self.tab3_fm1.pack(side=LEFT, fill=BOTH, expand=YES)
+
+        self.tab3_fm2 = Frame(self)
+        self.tab3_lbl_reg_no = Label(self.tab3_fm2, width=12, font=('Arial', 16), textvariable=self.reg_no).pack(side=TOP, fill=BOTH, expand=YES)
+        self.tab3_lbl_nickname = Label(self.tab3_fm2, width=12, font=('Arial', 10), textvariable=self.nickname).pack(side=TOP, fill=BOTH, expand=YES)
+        self.tab3_lbl_attend_type = Label(self.tab3_fm2, width=12, font=('Arial', 16), textvariable=self.attend_type).pack(side=TOP, fill=BOTH, expand=YES)
+        self.tab3_fm2.pack(side=LEFT, padx=10)
+
+        self.tab3_fm3 = Frame(self)
+        self.tab3_lbl_uid = Label(self.tab3_fm3, width=6, font=('Arial', 12), textvariable=sv_uid).pack(side=TOP, anchor=W, fill=X, expand=YES)
+        self.tab3_btn1 = Button(self.tab3_fm3, text='Pair', font=('Arial', 10))
+        #self.tab3_btn1.pack(side=TOP, anchor=W, expand=YES)
+        self.tab3_btn1.pack(side=LEFT, anchor=W)
+        self.tab3_btn1.bind('<Button-1>', self.pair_uid)
+        self.tab3_lbl_pair_status = Label(self.tab3_fm3, width=1, font=('Arial', 10), textvariable=sv_pair_status).pack(side=LEFT, fill=BOTH, expand=YES)
+        self.tab3_btn2 = Button(self.tab3_fm3, text='Unpair', font=('Arial', 10))
+        self.tab3_btn2.pack(side=LEFT, anchor=E)
+        self.tab3_btn2.bind('<Button-1>', self.unpair_uid)
+        self.tab3_fm3.pack(side=LEFT, fill=BOTH, expand=YES)
+
+    def load_profile(self, button):
+        reg_no = self.txt3_fm1.get("1.0", "end")
+        user_info = self.db.getInfoByReg(int(reg_no))
+        self.reg_no.set(user_info.reg_no)
+        self.nickname.set(user_info.nickname)
+        self.attend_type.set(user_info.attend_type)
+
+    def pair_uid(self, button):
+        # from nfc import NFC
+        # NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
+        print "pair"
+
+    def unpair_uid(self, button):
+        print "unpair"
 
 # the bulk of the logic is in the actual tab bar
 
@@ -67,7 +123,6 @@ class TabBar(Frame):
         self.buttons[tabname].pack_forget()
         del self.buttons[tabname]
 
-
     def switch_tab(self, name):
         if self.current_tab:
             self.buttons[self.current_tab].config(relief=BASE)
@@ -102,6 +157,7 @@ class TabBar(Frame):
                 if "UID (NFCID1)" in line:
                     uid_nfcid = line.split(":")
                     uid = uid_nfcid[1].strip(' \t\n\r')
+                    sv_uid.set(uid)
                     print uid
 
             if self.current_tab == TAB1 :
@@ -164,41 +220,11 @@ if __name__ == '__main__':
     txt = Text(tab2, width=50, height=20)
     txt.pack(side=LEFT, fill=X, expand=YES)
 
-
-
-    tab3 = Tab(root, TAB3)
-    tab3_fm1 = Frame(tab3)
-    txt3_fm1 = Text(tab3_fm1, width=3, height=1, font=('Arial', 12))
-    txt3_fm1.pack(side=TOP, fill=X, expand=YES)
-    txt3_fm1.focus()
-    tab3_btn1 = Button(tab3_fm1, text='OK')
-    tab3_btn1.pack(side=TOP, anchor=W, fill=X, expand=YES)
-    #tab3_btn1.bind('<Button-1>', tabbar.load_profile)
-    #tab3_btn1.bind('<Button-1>', tabbar.load_profile(3))
-    tab3_fm1.pack(side=LEFT, fill=BOTH, expand=YES)
-
-    tab3_fm2 = Frame(tab3)
-    tab3_lbl_reg_no = Label(tab3_fm2, width=12, font=('Arial', 16), textvariable=sv_reg_no).pack(side=TOP, fill=BOTH, expand=YES)
-    tab3_lbl_nickname = Label(tab3_fm2, width=12, font=('Arial', 10), textvariable=sv_nickname).pack(side=TOP, fill=BOTH, expand=YES)
-    tab3_lbl_attend_type = Label(tab3_fm2, width=12, font=('Arial', 16), textvariable=sv_attend_type).pack(side=TOP, fill=BOTH, expand=YES)
-    tab3_fm2.pack(side=LEFT, padx=10)
-
-    tab3_fm3 = Frame(tab3)
-    tab3_lbl_uid = Label(tab3_fm3, width=6, font=('Arial', 12), textvariable=sv_uid).pack(side=TOP, anchor=W, fill=X, expand=YES)
-    tab3_btn1 = Button(tab3_fm3, text='Pair', font=('Arial', 10))
-    #tab3_btn1.pack(side=TOP, anchor=W, expand=YES)
-    tab3_btn1.pack(side=LEFT, anchor=W)
-    #tab3_btn1.bind('<Button-1>', tabbar.pair_uid)
-    tab3_lbl_pair_status = Label(tab3_fm3, width=1, font=('Arial', 10), textvariable=sv_pair_status).pack(side=LEFT, fill=BOTH, expand=YES)
-    tab3_btn2 = Button(tab3_fm3, text='Unpair', font=('Arial', 10))
-    tab3_btn2.pack(side=LEFT, anchor=E)
-    #tab3_btn2.bind('<Button-1>', tabbar.unpair_uid)
-    tab3_fm3.pack(side=LEFT, fill=BOTH, expand=YES)
-
+    # tab3
+    tab3 = Tab3(root)
 
     # tab4
     tab4 = Tab(root, TAB4)
-
 
     tabbar.add(tab1)                   # add the tabs to the tab bar
     tabbar.add(tab2)
