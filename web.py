@@ -37,6 +37,7 @@ class web():
 
     def register(self, dataList):
         # dataList = [(reg_no, uid, regist_wtime), ...]
+        # return: True/False
 
         # test data
         # reg_no:
@@ -56,6 +57,7 @@ class web():
 
     def tshirtQuery(self, uid):
         # uid = uid
+        # return: (tshirt, tshirt_wtime)
 
         # test data
         # uid: 1b b6 d5 09
@@ -69,10 +71,12 @@ class web():
 
     def tshirtUpdate(self, data):
         # data = (uid, tshirt_wtime)
+        # return: True/False
         pass
 
     def infoQuery(self, dataList):
         # dataList = [uid, ...]
+        # return: [(reg_no, uid), ...]
         pass
 
 def main():
