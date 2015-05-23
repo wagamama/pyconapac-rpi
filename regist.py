@@ -173,16 +173,16 @@ class TabBar(Frame, threading.Thread):
                     sv_attend_type.set(user.attend_type)
 
             elif self.current_tab == TAB2 :
-                sv_uid.set(uid)
                 cnnt = web()
                 result = cnnt.tshirtQuery(uid)
                 if result:
-                    tsize, ttime = result
-                    if ttime == 0:
+                    tnickname, tsize, ttime = result
+                    sv_nickname.set(tnickname)
+                    if ttime == 0:                         # no T-shirt yet
                         sv_tshirt_size.set(tsize)
                         cnnt.tshirtUpdate()
-                    else:
-                        sb_nickname.set('No more T-shirt for you')
+                    else:                                  # already got T-shirt
+                        sv_reg_no.set('No more T-shirt for you')
             else:
                 pass
 
