@@ -1,7 +1,7 @@
 import re, os
 import logging
 
-re_machine = re.compie(r'Serial[\s]+:[\s]+([a-f\d]+)')
+re_machine = re.compile(r'Serial[\s]+:[\s]+([a-f\d]+)')
 def machine_id():
     try:
         return re_machine.findall(open('/proc/cpuinfo').read())[0]
