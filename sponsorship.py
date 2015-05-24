@@ -14,8 +14,9 @@ for index, uid in enumerate(read_rfid()):
         r = requests.post(api, {
             'rfid': uid,
             'mid': info.MACHINE_ID,
+            'data': "{}"
         })
-        assert r.status_code == requests.codes.ok, r.text
+        assert r.ok, r.text
     except Exception as e:
         logging.exeption(e)
 
