@@ -1,14 +1,19 @@
 import sqlite3
+import inspect
+from datetime import datetime
 
-INFO_FIELD = "reg_no, uid, fullname, nickname, tshirt, attend_type, regist_wtime, tshirt_wtime, update_status"
+INFO_FIELD = "reg_no, uid, fullname, nickname, tshirt, attend_type, regist_wtime, tshirt_wtime, scan_status, ticket_type"
+NOT_FOUND = "NOT FOUND"
 
 class Info:
-    reg_no = None
-    uid = None
-    fullname = None
-    nickname = None
-    attend_type = None
-    regist_wtime = None
+    reg_no = NOT_FOUND
+    uid = NOT_FOUND
+    fullname = NOT_FOUND
+    nickname = NOT_FOUND
+    attend_type = NOT_FOUND
+    regist_wtime = NOT_FOUND
+    tshirt_wtime = NOT_FOUND
+    ticket_type = NOT_FOUND
 
     def __init__(self, data=None):
         self.data = data
@@ -21,7 +26,8 @@ class Info:
             self.attend_type = data[5]
             self.regist_wtime = data[6] if data[6] != '0' else None
             self.tshirt_wtime = data[7] if data[7] != '0' else None
-            self.update_status = False if data[8] == 0 else True
+            self.scan_status = False if data[8] == 0 else True
+            self.ticket_type = data[9]
 
     def __repr__(self):
         return str(self.data)
@@ -35,18 +41,23 @@ class DBController:
         self.conn.close()
 
     def setRegistTimeByUid(self, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE regist SET regist_wtime=DateTime('now', 'utc') WHERE uid=?", (uid,))
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE regist SET regist_wtime=? WHERE uid=?", (now, uid,))
         self.conn.commit()
         return self.getInfoByUid(uid)
 
     def setTshirtTimeByUid(self, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE regist SET tshirt_wtime=DateTime('now', 'utc') WHERE uid=?", (uid,))
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE regist SET tshirt_wtime=? WHERE uid=?", (now, uid,))
         self.conn.commit()
         return self.getInfoByUid(uid)
 
     def getInfoByReg(self, reg_no):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
         sql = "SELECT " + INFO_FIELD + " FROM regist WHERE reg_no=?"
         cursor.execute(sql, (reg_no,))
@@ -57,16 +68,18 @@ class DBController:
             return Info(all_rows[0])
 
     def getInfoByUid(self, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
         sql = "SELECT " + INFO_FIELD + " FROM regist WHERE uid=?"
         cursor.execute(sql, (uid,))
         all_rows = cursor.fetchall()
-        if len(all_rows)!=1:
-            return Info()
-        else:
+        if len(all_rows) == 1:
             return Info(all_rows[0])
+        else:
+            return Info()
 
     def getInfoByUids(self, uidList):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         if len(uidList)==0:
             return []
 
@@ -85,20 +98,23 @@ class DBController:
         return infoList
 
     def checkIn(self, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         info = self.getInfoByUid(uid)
         if info.data is not None:
             return self.setRegistTimeByUid(uid)
         return info
 
     def pairUidByReg(self, reg_no, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
         cursor.execute("UPDATE regist SET uid=? WHERE reg_no=?", (uid, reg_no))
         self.conn.commit()
         return self.setRegistTimeByUid(uid)
 
     def getNeedUpdate(self):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         cursor = self.conn.cursor()
-        sql = "SELECT " + INFO_FIELD + " FROM regist WHERE regist_wtime!='0' AND update_status=0"
+        sql = "SELECT " + INFO_FIELD + " FROM regist WHERE regist_wtime!='0' AND scan_status=0"
         cursor.execute(sql)
         all_rows = cursor.fetchall()
         infoList = []
@@ -107,12 +123,13 @@ class DBController:
         return infoList
 
     def setUpdated(self, infoList):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         if len(infoList)==0:
             return []
 
         sql = "BEGIN TRANSACTION;"
         for info in infoList:
-            sql += "UPDATE regist SET update_status=1 WHERE reg_no='" + info.reg_no + "';"
+            sql += "UPDATE regist SET scan_status=1 WHERE reg_no='" + info.reg_no + "';"
         sql += "COMMIT;"
         self.conn.executescript(sql)
         sql = "SELECT " + INFO_FIELD + " FROM regist WHERE reg_no IN "

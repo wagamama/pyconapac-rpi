@@ -1,12 +1,13 @@
 import requests
 import json
+import inspect
+from datetime import datetime
 from json import JSONEncoder, JSONDecoder
 
-class web():
-    #url = "http://www.raspberrypi.com.tw/pycon_tw/2015/server.php"
-    #url = "http://www.raspberrypi.com.tw/pycon_tw/2015/code/srv.php"
+class Web():
+    #url = "http://www.raspberrypi.com.tw/pycon_tw/2015/code/handon-test.php"
+    #url = "http://www.raspberrypi.com.tw/pycon_tw/2015/code/handon.php"
     url = "http://www.raspberrypi.com.tw/pycon_tw/2015/code/server.php"
-    #url = "http://www.raspberrypi.com.tw/pycon_tw/2015/code/json.php"
     headers = {'content-type': 'application/json'}
     payload = None
 
@@ -55,33 +56,62 @@ class web():
         req = self.post(payloadJson)
         # need to continue
 
+    def pairUid(self, reg_no, uid):
+        try:
+            #payload = json.dumps(payload)
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            payload = {'action':'regist-update', 'reg_no':reg_no, 'uid':uid, 'regist_wtime':now}
+            result = requests.post(self.url, data=payload)
+
+            return json.loads(result.text)
+        except requests.exceptions.RequestException as e:
+            print e
+            return self.err()
+
     def tshirtQuery(self, uid):
+        print type(self).__name__ + "/" + inspect.stack()[0][3]
         # uid = uid
-        # return: (tshirt, tshirt_wtime)
+        # return: (reg_no, nickname, tshirt, tshirt_wtime)
 
         # test data
         # uid: 1b b6 d5 09
-        payloadPy = {"action": "tshirt-register",
-            "data": uid}
-        payloadJson = self.encoder.encode(payloadPy)
-        req = self.post(payloadJson)
-        if req.status_code != 200:
-            return None
-        # need to continue
+        payload = {"action": "tshirt-query", "uid": uid}
 
-    def tshirtUpdate(self, data):
+        try:
+            req = requests.post(self.url, data=payload)
+        
+            if req.status_code != 200:
+                print req.status_code
+                return None
+
+            print req.text
+            return json.loads(req.text)
+        except requests.exceptions.RequestException as e:
+            print e
+            return self.err()
+
+    def tshirtUpdate(self, uid):
         # data = (uid, tshirt_wtime)
         # return: True/False
-        pass
+
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        payload = {"action": "tshirt-update", "uid": uid, "tshirt_wtime": now}
+
+        try:
+            req = requests.post(self.url, data=payload)
+        
+            if req.status_code != 200:
+                return None
+
+            print req.text
+            return json.loads(req.text)
+        except requests.exceptions.RequestException as e:
+            print e
+            return self.err()
+
 
     def infoQuery(self, dataList):
         # dataList = [uid, ...]
         # return: [(reg_no, uid), ...]
         pass
 
-def main():
-    w = web()
-    w.tshirtQuery('1b b6 d5 09')
-
-if __name__ == '__main__':
-    main()
