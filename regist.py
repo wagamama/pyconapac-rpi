@@ -347,6 +347,7 @@ class Tab3(Tab):
             self.pair_status.set("NameError")
         finally:
             self.clear_profile()
+            sv_uid.set("")
 
 
 
