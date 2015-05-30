@@ -166,18 +166,24 @@ class Tab1(Tab):
         self.reg_no = StringVar()
         self.nickname = StringVar()
         self.uid = StringVar()
+        self.tshirt_wtime = StringVar()
 
-        self.tab1_lbl_reg_no = Label(self, bg="red", fg="white", font=('Arial', 24), textvariable=sv_reg_no).pack(fill=X)
-        self.tab1_lbl_nickname = Label(self, bg="green", fg="black", font=('Arial', 32), textvariable=sv_nickname).pack(fill=X)
-        self.tab1_lbl_uid = Label(self, bg="blue", fg="white", font=('Arial', 32), textvariable=sv_uid).pack(fill=X)
+        self.tab1_lbl_reg_no = Label(self, bg="red", fg="white", font=('Arial', 16), textvariable=sv_reg_no).pack(fill=X)
+        self.tab1_lbl_nickname = Label(self, bg="green", fg="black", font=('Arial', 22), textvariable=sv_nickname).pack(fill=X)
+        self.tab1_lbl_uid = Label(self, bg="blue", fg="white", font=('Arial', 20), textvariable=sv_uid).pack(fill=X)
+        self.tab1_lbl_status = Label(self, bg="yellow", fg="black", font=('Arial', 22), textvariable=sv_regist_status).pack(side=LEFT, fill=BOTH, expand=YES)
 
     def load_profile(self, uid):
         print type(self).__name__ + "/" + inspect.stack()[0][3]
         try:
+            result = self.web.infoQuery(uid)
+            status = result['result']['regist_wtime'] if result['result']['regist_wtime'] != '0' else 'First Check-in'
             user_info = self.db.getInfoByUid(uid)
             sv_reg_no.set(str(user_info.reg_no) + "/" + user_info.ticket_type.split(' ')[-1])
             sv_nickname.set(user_info.nickname)
             sv_uid.set(uid)
+
+            sv_regist_status.set(status)
             result = self.web.registerUpdate(user_info.reg_no, uid)
 
             # user_info = self.web.infoQuery(uid)
@@ -360,6 +366,7 @@ if __name__ == '__main__':
     sv_uid = StringVar()
     sv_tshirt = StringVar()
     sv_tshirt_status = StringVar()
+    sv_regist_status = StringVar()
     sv_regist_wtime = StringVar()
     sv_tshirt_wtime = StringVar()
     sv_pair_status = StringVar()
