@@ -36,27 +36,16 @@ class Web():
             print e
             return self.err()
 
-    def register(self, dataList):
-        # dataList = [(reg_no, uid, regist_wtime), ...]
+    def registerUpdate(self, reg_no, uid):
+        # reg_no = reg_no
+        # uid = uid
+        # regist_wtime = regist_wtime
         # return: True/False
 
         # test data
         # reg_no:
         # uid:
         # regist_wtime:
-        payloadPy = {"action": "register",
-            "data": []}
-        for data in dataList:
-            payloadPy['data'].append({
-                "reg_no": data[0],
-                "uid": data[1],
-                "regist_wtime": data[2]
-                })
-        payloadJson = self.encoder.encode(payloadPy)
-        req = self.post(payloadJson)
-        # need to continue
-
-    def pairUid(self, reg_no, uid):
         try:
             #payload = json.dumps(payload)
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -74,12 +63,12 @@ class Web():
         # return: (reg_no, nickname, tshirt, tshirt_wtime)
 
         # test data
-        # uid: 1b b6 d5 09
+        # uid: 09 4d 06 02
         payload = {"action": "tshirt-query", "uid": uid}
 
         try:
             req = requests.post(self.url, data=payload)
-        
+
             if req.status_code != 200:
                 print req.status_code
                 return None
@@ -99,7 +88,7 @@ class Web():
 
         try:
             req = requests.post(self.url, data=payload)
-        
+
             if req.status_code != 200:
                 return None
 
@@ -110,8 +99,21 @@ class Web():
             return self.err()
 
 
-    def infoQuery(self, dataList):
-        # dataList = [uid, ...]
-        # return: [(reg_no, uid), ...]
-        pass
+    def infoQuery(self, uid):
+        # uid = uid
+        # return: reg_no, uid, nickname, regist_wtime, tshirt_wtime
+        payload = {"action": "query", "uid": uid}
+
+        try:
+            req = requests.post(self.url, data=payload)
+
+            if req.status_code != 200:
+                print req.status_code
+                return None
+
+            print req.text
+            return json.loads(req.text)
+        except requests.exceptions.RequestException as e:
+            print e
+            return self.err()
 

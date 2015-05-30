@@ -133,11 +133,11 @@ class TabBar(Frame, threading.Thread):
                     uid_nfcid = line.split(":")
                     uid = uid_nfcid[1].strip(' \t\n\r')
                     os.system("sudo python /home/pi/pyconapac-rpi/buzzer.py &")
-                
+
                     if self.current_tab == TAB1 :
                         tab1 = Tab1(root)
                         tab1.load_profile(uid)
-                        
+
                     elif self.current_tab == TAB2 :
                         tab2 = Tab2(root)
                         tab2.load_profile(uid)
@@ -150,7 +150,7 @@ class TabBar(Frame, threading.Thread):
                         data = {'action':'query', 'uid':uid}
                         r = w.post(data);
                         j = json.loads(r.text)
-            
+
                         print uid
                         sv_uid.set(uid)
 
@@ -180,7 +180,7 @@ class Tab1(Tab):
             sv_uid.set(uid)
 
             if user_info.regist_wtime == None:
-                self.db. checkIn(uid)
+                self.db.checkIn(uid)
 
         except ValueError:
             sv_reg_no.set(VALUE_ERROR)
@@ -321,7 +321,7 @@ class Tab3(Tab):
         # from nfc import NFC
         # NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
         try :
-            result = self.web.pairUid(reg_no, uid)
+            result = self.web.registerUpdate(reg_no, uid)
             print result
             self.pair_status.set(result["status"])
         except NameError:
