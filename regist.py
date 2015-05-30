@@ -192,8 +192,8 @@ class Tab1(Tab):
 
         except ValueError:
             sv_reg_no.set(VALUE_ERROR)
-            sv_nickname.set(uid)
-            sv_uid.set(current_function)
+            sv_nickname.set(VALUE_ERROR)
+            sv_uid.set(uid)
 
 
 
