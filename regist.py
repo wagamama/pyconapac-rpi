@@ -89,6 +89,7 @@ class TabBar(Frame, threading.Thread):
         sv_fullname.set("")
         sv_uid.set("")
         sv_pair_status.set("")
+        sv_regist_status.set("")
 
         subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
 
@@ -315,6 +316,7 @@ class Tab3(Tab):
         self.reg_no.set("")
         self.nickname.set("")
         self.fullname.set("")
+        self.txt3_fm1.delete("1.0", "end")
 
     def clear_pair(self):
         sv_uid.set("")
