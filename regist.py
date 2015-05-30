@@ -89,6 +89,7 @@ class TabBar(Frame, threading.Thread):
         sv_fullname.set("")
         sv_uid.set("")
         sv_pair_status.set("")
+        sv_regist_status.set("")
 
         subprocess.call(['/home/pi/pyconapac-rpi/sh/kill_keyboard.sh'])
 
@@ -286,6 +287,7 @@ class Tab3(Tab):
         self.fullname = StringVar()
         self.uid = StringVar()
         self.pair_status = StringVar()
+        self.is_reg_no = False
 
         self.tab3_fm1 = Frame(self)
         self.txt3_fm1 = Text(self.tab3_fm1, width=3, height=1, font=('Arial', 12))
@@ -315,6 +317,7 @@ class Tab3(Tab):
         self.reg_no.set("")
         self.nickname.set("")
         self.fullname.set("")
+        self.txt3_fm1.delete("1.0", "end")
 
     def clear_pair(self):
         sv_uid.set("")
@@ -331,20 +334,25 @@ class Tab3(Tab):
         self.nickname.set(user_info.nickname)
         self.fullname.set(user_info.fullname)
         self.clear_pair()
+        self.is_reg_no = True
 
     def pair_uid(self, button):
         print type(self).__name__ + "/" + inspect.stack()[0][3]
         # from nfc import NFC
         # NFC('/home/pi/3rd/libnfc-1.7.0-rc7/examples/nfc-poll').read()
         try :
+            if self.is_reg_no != True:
+                return
             result = self.web.registerUpdate(reg_no, uid)
             print result
             self.pair_status.set(result["status"])
+            self.is_reg_no = False
         except NameError:
             print "NameError"
             self.pair_status.set("NameError")
         finally:
             self.clear_profile()
+            sv_uid.set("")
 
 
 
