@@ -178,13 +178,15 @@ class Tab1(Tab):
         try:
             result = self.web.infoQuery(uid)
             status = result['result']['regist_wtime'] if result['result']['regist_wtime'] != '0' else 'First Check-in'
-            user_info = self.db.getInfoByUid(uid)
-            sv_reg_no.set(str(user_info.reg_no) + "/" + user_info.ticket_type.split(' ')[-1])
-            sv_nickname.set(user_info.nickname)
+            reg_no = result['result']['reg_no']
+            nickname = result['result']['nickname']
+            user_info = self.db.getInfoByReg(reg_no)
+            sv_reg_no.set(reg_no + "/" + user_info.ticket_type.split(' ')[-1])
+            sv_nickname.set(nickname)
             sv_uid.set(uid)
 
             sv_regist_status.set(status)
-            result = self.web.registerUpdate(user_info.reg_no, uid)
+            result = self.web.registerUpdate(reg_no, uid)
 
             # user_info = self.web.infoQuery(uid)
             # sv_reg_no.set(str(user_info['result']['reg_no']))
