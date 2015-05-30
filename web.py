@@ -63,7 +63,7 @@ class Web():
         # return: (reg_no, nickname, tshirt, tshirt_wtime)
 
         # test data
-        # uid: 09 4d 06 02
+        # uid: 09  4d  06  02
         payload = {"action": "tshirt-query", "uid": uid}
 
         try:

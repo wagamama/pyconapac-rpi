@@ -161,7 +161,7 @@ class TabBar(Frame, threading.Thread):
 class Tab1(Tab):
     def __init__(self, master):
         Tab.__init__(self, master, u"報到".encode('utf-8'))
-
+        self.web = Web()
         self.db = DBController("/home/pi/pyconapac-rpi/db/pycon2015.db.nofacebook")
         self.reg_no = StringVar()
         self.nickname = StringVar()
@@ -178,9 +178,17 @@ class Tab1(Tab):
             sv_reg_no.set(str(user_info.reg_no) + "/" + user_info.ticket_type.split(' ')[-1])
             sv_nickname.set(user_info.nickname)
             sv_uid.set(uid)
+            result = self.web.registerUpdate(user_info.reg_no, uid)
 
-            if user_info.regist_wtime == None:
-                self.db.checkIn(uid)
+            # user_info = self.web.infoQuery(uid)
+            # sv_reg_no.set(str(user_info['result']['reg_no']))
+            # sv_nickname.set(str(user_info['result']['nickname']))
+            # sv_uid.set(str(user_info['result']['uid']))
+            # result = self.web.registerUpdate(user_info['result']['reg_no'], uid)
+            print result
+
+            # if user_info.regist_wtime == None:
+            #     self.db.checkIn(uid)
 
         except ValueError:
             sv_reg_no.set(VALUE_ERROR)
