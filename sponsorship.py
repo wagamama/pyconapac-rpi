@@ -7,21 +7,9 @@ import time
 
 api = 'http://codeme.krdai.info/api/checkin/'
 
-for i in range(20):
-    print i,
-    try:
-        with BuzzManager(i) as buzzer:
-            buzzer.buzz()
-            print 'good'
-    except Exception as e:
-        logging.exception(e)
-        print 'fail'
-
-    time.sleep(1)
-
 print info.MACHINE_ID, info.SD_ID
 
-with BuzzManager() as buzzer:
+with BuzzManager(7) as buzzer:
     for index, uid in enumerate(read_rfid()):
         print index, uid
 
