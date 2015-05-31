@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 class BuzzManager:
-    def __init__(self, buzzer_pin = 11):
+    def __init__(self, buzzer_pin = 12):
         self.buzzer_pin = buzzer_pin
 
     def __enter__(self):
