@@ -3,12 +3,13 @@ from lib.buzzer import BuzzManager
 from lib import info
 import requests
 import logging
+import time
 
 api = 'http://codeme.krdai.info/api/checkin/'
 
 print info.MACHINE_ID, info.SD_ID
 
-with BuzzManager() as buzzer:
+with BuzzManager(12) as buzzer:
     for index, uid in enumerate(read_rfid()):
         print index, uid
 
