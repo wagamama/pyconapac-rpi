@@ -8,7 +8,7 @@ class BuzzManager:
         GPIO.setup(buzzer_pin, GPIO.OUT)
         return self
 
-    def buzz(pitch=800, duration=0.1):
+    def buzz(self, pitch=800, duration=0.1):
         period = 1.0 / pitch
         delay = period / 2
         cycles = int(duration * pitch)
