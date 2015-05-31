@@ -9,7 +9,7 @@ api = 'http://codeme.krdai.info/api/checkin/'
 
 print info.MACHINE_ID, info.SD_ID
 
-with BuzzManager(8) as buzzer:
+with BuzzManager(6) as buzzer:
     for index, uid in enumerate(read_rfid()):
         print index, uid
 
