@@ -1,4 +1,5 @@
 cd /home/pi
+rm -f /home/pi/master.zip
 wget https://github.com/wagamama/pyconapac-rpi/archive/master.zip
 rm -rf /home/pi/pyconapac-rpi
 unzip master.zip
