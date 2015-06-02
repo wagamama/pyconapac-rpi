@@ -24,6 +24,6 @@ with BuzzManager(12) as buzzer:
             logging.exeption(e)
 
         try:
-            buzzer.buzz(duration=1)
+            buzzer.buzz()
         except Exception as e:
             logging.exception(e)
