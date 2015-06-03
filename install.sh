@@ -19,6 +19,8 @@ if [ ! -f /tmp/network ]; then
             let i=$i+1
         done
         sudo kill -9 $(ps -ef | grep sponsorship.py | awk '{print $2}')
+        sudo dpkg --configure -a
+        sudo apt-get install python-pip
         sudo pip install -r /home/pi/pyconapac-rpi/requirements.txt
         sudo python /home/pi/pyconapac-rpi/sponsorship.py &
         sudo python /home/pi/pyconapac-rpi/health_check.py &
