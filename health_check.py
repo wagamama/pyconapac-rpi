@@ -3,7 +3,7 @@ import requests
 import logging
 import time
 
-api = 'http://codeme.krdai.info/api/health/'
+api = 'http://codeme.krdai.info/api/machinelog/'
 
 print info.MACHINE_ID, info.SD_ID
 
