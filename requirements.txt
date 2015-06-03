@@ -1,2 +1,3 @@
+spidev
 requests
 -e git://github.com/lthiery/SPI-Py.git@0.4.1#egg=spi
