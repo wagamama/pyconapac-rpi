@@ -16,5 +16,5 @@ while True:
     except Exception as e:
         logging.exception(e)
 
-    # send signal every 5 mins
-    time.sleep(60*5)
+    # send signal every 1 mins
+    time.sleep(60)
