@@ -22,14 +22,10 @@ class BuzzManager:
 
         GPIO.cleanup()
 
-    def __exit__(self, type, value, traceback):
-        GPIO.cleanup()
+    # def __exit__(self, type, value, traceback):
+    #     GPIO.cleanup()
 
 
 if __name__ == '__main__':
     with BuzzManager() as buzzer:
-        buzzer.buzz()
-        time.sleep(0.1)
-        buzzer.buzz()
-        time.sleep(0.1)
         buzzer.buzz()
