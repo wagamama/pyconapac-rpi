@@ -5,5 +5,5 @@ rm -rf /home/pi/pyconapac-rpi
 unzip master.zip
 mv /home/pi/pyconapac-rpi-master /home/pi/pyconapac-rpi
 chown -R pi:pi pyconapac-rpi
-python /pyconapac-rpi/lib/buzzer.py
+python /home/pi/pyconapac-rpi/lib/buzzer.py
 touch /tmp/network
