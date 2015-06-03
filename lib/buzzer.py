@@ -22,8 +22,9 @@ class BuzzManager:
 
         GPIO.cleanup()
 
-    # def __exit__(self, type, value, traceback):
-    #     GPIO.cleanup()
+    def __exit__(self, type, value, traceback):
+        pass
+        # GPIO.cleanup()
 
 
 if __name__ == '__main__':
