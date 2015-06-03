@@ -17,6 +17,7 @@ if [ ! -f /tmp/network ]; then
             cd /home/pi/pyconapac-rpi
             # put check bee here
 
+            sudo pip install -r /home/pi/pyconapac-rpi/requirements.txt
             sudo python /home/pi/pyconapac-rpi/sponsorship.py &
             python /home/pi/pyconapac-rpi/health_check.py &
             break
@@ -24,5 +25,3 @@ if [ ! -f /tmp/network ]; then
         i=$[$i+1]
     done
 fi
-
-
