@@ -10,7 +10,6 @@ if [ ! -f /tmp/network ]; then
         unzip master.zip
         mv /home/pi/pyconapac-rpi-master /home/pi/pyconapac-rpi
         chown -R pi:pi pyconapac-rpi
-        touch /tmp/network
         cd /home/pi/pyconapac-rpi
         i="0"
         while [ $i -lt 4 ]
@@ -18,12 +17,12 @@ if [ ! -f /tmp/network ]; then
             sudo python /home/pi/pyconapac-rpi/lib/buzzer.py
             let i=$i+1
         done
-        sudo kill -9 $(ps -ef | grep sponsorship.py | awk '{print $2}')
         sudo dpkg --configure -a
         sudo apt-get install python-pip
         sudo pip install -r /home/pi/pyconapac-rpi/requirements.txt
+        sudo kill -9 $(ps -ef | grep sponsorship.py | awk '{print $2}')
         sudo python /home/pi/pyconapac-rpi/sponsorship.py &
         sudo python /home/pi/pyconapac-rpi/health_check.py &
-
+        touch /tmp/network
     fi
 fi
