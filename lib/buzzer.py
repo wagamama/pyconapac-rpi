@@ -20,6 +20,8 @@ class BuzzManager:
             GPIO.output(self.buzzer_pin, False)
             time.sleep(delay)
 
+        GPIO.cleanup()
+
     def __exit__(self, type, value, traceback):
         GPIO.cleanup()
 
