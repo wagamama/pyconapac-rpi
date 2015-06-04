@@ -28,7 +28,7 @@ class BuzzManager:
         pass
 
     def buzz(self, pitch=800, duration=0.1):
-        os.system('/home/pi/pyconapac-rpi/lib/buzzer.py')
+        os.system('sudo /home/pi/pyconapac-rpi/lib/buzzer.py')
 
 
 if __name__ == "__main__":
