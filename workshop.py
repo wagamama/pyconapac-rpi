@@ -18,7 +18,9 @@ with BuzzManager() as buzzer:
                 # send to codeme server
             else:
                 # user not register to this workshop
-                buzzer.buzz(duration=0.5)
+                buzzer.buzz()
+                buzzer.buzz()
+                buzzer.buzz()
 
         except Exception as e:
             logging.exception(e)

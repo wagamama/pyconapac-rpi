@@ -1,32 +1,44 @@
 import RPi.GPIO as GPIO
 import time
+import os
+
+buzzer_pin = 12
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(buzzer_pin, GPIO.OUT)
+
+def buzz(pitch, duration) :
+    period = 1.0 / pitch
+    delay = period / 2
+    cycles = int(duration * pitch)
+    for i in range(cycles) :
+        GPIO.output(buzzer_pin, True)
+        time.sleep(delay)
+        GPIO.output(buzzer_pin, False)
+        time.sleep(delay)
+
 
 class BuzzManager:
-    def __init__(self, buzzer_pin = 12):
-        self.buzzer_pin = buzzer_pin
+    def __init__(self, pin):
+        pass
 
     def __enter__(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.buzzer_pin, GPIO.OUT)
         return self
 
-    def buzz(self, pitch=800, duration=0.1):
-        period = 1.0 / pitch
-        delay = period / 2
-        cycles = int(duration * pitch)
-        for i in range(cycles) :
-            GPIO.output(self.buzzer_pin, True)
-            time.sleep(delay)
-            GPIO.output(self.buzzer_pin, False)
-            time.sleep(delay)
-
-        # GPIO.cleanup()
-
     def __exit__(self, type, value, traceback):
-        # pass
+        pass
+
+    def buzz(self, pitch=800, duration=0.1):
+        os.system('sudo /home/pi/pyconapac-rpi/lib/buzzer.py')
+
+
+if __name__ == "__main__":
+    try:
+        pitch_s = 800
+        duration_s = 0.1
+        buzz(float(pitch_s), float(duration_s))
+
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+    finally:
         GPIO.cleanup()
 
-
-if __name__ == '__main__':
-    with BuzzManager() as buzzer:
-        buzzer.buzz()
