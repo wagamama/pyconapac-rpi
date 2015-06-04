@@ -163,7 +163,7 @@ class Tab1(Tab):
     def __init__(self, master):
         Tab.__init__(self, master, u"報到".encode('utf-8'))
         self.web = Web()
-        self.db = DBController("/home/pi/pyconapac-rpi/db/pycon2015.db.nofacebook")
+        self.db = DBController("/home/pi/pyconapac-rpi/db/pycon2015.db")
         self.reg_no = StringVar()
         self.nickname = StringVar()
         self.uid = StringVar()
