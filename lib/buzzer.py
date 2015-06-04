@@ -16,21 +16,6 @@ def buzz(pitch, duration) :
         GPIO.output(buzzer_pin, False)
         time.sleep(delay)
 
-
-class BuzzManager:
-    def __init__(self, pin):
-        pass
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-    def buzz(self, pitch=800, duration=0.1):
-        os.system('sudo /home/pi/pyconapac-rpi/lib/buzzer.py')
-
-
 if __name__ == "__main__":
     try:
         pitch_s = 800
