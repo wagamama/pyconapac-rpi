@@ -18,8 +18,8 @@ def get_ips():
 
 env.user = "pi"
 env.password = "raspberry"
-#env.hosts = list(set(get_ips() + get_ips()))
-env.hosts= ['192.168.2.178']
+env.hosts = list(set(get_ips() + get_ips()))
+#env.hosts= ['192.168.2.178']
 
 
 def is_checkin():
