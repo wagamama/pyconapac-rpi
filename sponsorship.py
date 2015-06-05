@@ -1,5 +1,6 @@
 from lib.rfid_mfrc522 import read_rfid
 from lib import info
+from lib import local_storage
 import requests
 import logging
 import time
@@ -11,6 +12,8 @@ print info.MACHINE_ID, info.SD_ID
 
 for index, uid in enumerate(read_rfid()):
     print index, uid
+
+    local_storage.add(uid, info.MACHINE_ID)
 
     try:
         r = requests.post(api, {
